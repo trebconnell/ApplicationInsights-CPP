@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Data.h"
 
 using namespace ApplicationInsights::core;

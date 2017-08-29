@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -226,8 +227,32 @@ void TelemetryClient::Track(Domain& telemetry)
 {
 	if (IsTrackingEnabled())
 	{
+        //if (!m_opID.empty())
+        //{
+        //    telemetry.SetOperationID(m_opID);
+        //}
+        //if (!m_parentIds.empty())
+        //{
+        //    telemetry.SetParentID(m_parentIds.back());
+        //}
+
 		m_channel->Enqueue(*m_context, telemetry);
 	}
+}
+
+void TelemetryClient::SetOperationID(const std::wstring& opID)
+{
+    m_opID = opID;
+}
+
+void TelemetryClient::PushParentID(const std::wstring& parentID)
+{
+    m_parentIds.emplace_back(parentID);
+}
+
+void TelemetryClient::PopParentID()
+{
+    m_parentIds.pop_back();
 }
 
 /// <summary>

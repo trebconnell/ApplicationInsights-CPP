@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "StringWriter.h"
 #include "Utils.h"
 #include <stdio.h>

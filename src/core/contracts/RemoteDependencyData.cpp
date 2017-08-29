@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "RemoteDependencyData.h"
 
 using namespace ApplicationInsights::core;

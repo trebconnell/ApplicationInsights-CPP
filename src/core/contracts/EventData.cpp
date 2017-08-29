@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "EventData.h"
 
 using namespace ApplicationInsights::core;

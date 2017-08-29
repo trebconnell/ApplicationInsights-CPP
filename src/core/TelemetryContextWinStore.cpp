@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TelemetryContext.h"
 
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows

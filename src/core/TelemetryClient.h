@@ -40,6 +40,12 @@ namespace ApplicationInsights
 			/// <returns>the config</returns>
 			TelemetryClientConfig *GetConfig() const { return m_config.get(); }
 
+            /// <summary>
+            /// Tracks the event.
+            /// </summary>
+            /// <param name="eventName">Name of the event.</param>
+            void TrackRequest(const std::wstring& eventName);
+
 			/// <summary>
 			/// Tracks the event.
 			/// </summary>
@@ -122,6 +128,11 @@ namespace ApplicationInsights
 			/// <param name="telemetry">The telemetry.</param>
 			void Track(Domain& telemetry);
 
+            void SetOperationID(const std::wstring& opID);
+
+            void PushParentID(const std::wstring& parentID);
+            void PopParentID();
+
 			/// <summary>
 			/// Flushes this instance.
 			/// </summary>
@@ -163,6 +174,9 @@ namespace ApplicationInsights
 
 			// The telemetry channel for this client.
 			std::unique_ptr<TelemetryChannel> m_channel;
+
+            std::wstring m_opID;
+            std::vector<std::wstring> m_parentIds;
 		};
 	}
 }

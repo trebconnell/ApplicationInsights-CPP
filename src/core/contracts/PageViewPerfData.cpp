@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "PageViewPerfData.h"
 
 using namespace ApplicationInsights::core;

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Utils.h"
 #include <time.h>
 #include <sys/timeb.h>

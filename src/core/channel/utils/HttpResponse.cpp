@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "HttpResponse.h"
 
 using namespace ApplicationInsights::core;

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "HttpHeaderField.h"
 #include <codecvt>
 #include <locale>

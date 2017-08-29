@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "CrashDataHeaders.h"
 
 using namespace ApplicationInsights::core;

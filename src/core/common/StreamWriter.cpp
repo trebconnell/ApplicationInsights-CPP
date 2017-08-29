@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <wchar.h>
 #include "StreamWriter.h"
 #include "string.h"
@@ -70,9 +71,9 @@ void StreamWriter::Write(double value)
 {
 	wchar_t buffer[128];
 #if WIN32
-	swprintf_s(buffer, 128, L"%ld", value);
+	swprintf_s(buffer, 128, L"%f", value);
 #else
-    swprintf(buffer, 128, L"%ld", value);
+    swprintf(buffer, 128, L"%f", value);
 #endif
 	return this->Write(buffer);
 }

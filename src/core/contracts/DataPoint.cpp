@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "DataPoint.h"
 
 using namespace ApplicationInsights::core;

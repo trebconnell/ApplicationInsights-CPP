@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TelemetryChannel.h"
 #include "../TelemetryContext.h"
 #include "../Contracts/Contracts.h"

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Location.h"
 
 using namespace ApplicationInsights::core;

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "BaseTelemetryContext.h"
 #include "Common/Utils.h"
 
@@ -37,7 +38,7 @@ void BaseTelemetryContext::InitContext()
 /// </summary>
 void BaseTelemetryContext::InitUser()
 {
-	Nullable<std::wstring> uuid = Utils::GenerateRandomUUID(); 
+	Nullable<std::wstring> uuid = std::wstring(L"Treb");
 	Nullable<std::wstring> date = Utils::GetCurrentDateTime();
 	user.SetId(uuid);
 	user.SetAccountAcquisitionDate(date);
@@ -56,6 +57,10 @@ void BaseTelemetryContext::InitDevice()
 	Nullable<std::wstring> strType;
 	strType.SetValue(L"Other");
 	device.SetType(strType);
+
+    Nullable<std::wstring> machineName;
+    machineName.SetValue(L"treborc-dev");
+    device.SetMachineName(machineName);
 }
 
 /// <summary>

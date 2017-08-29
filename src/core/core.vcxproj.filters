@@ -117,6 +117,7 @@
     <ClCompile Include="TelemetryContextWinStore.cpp" />
     <ClCompile Include="TelemetryContextWin32.cpp" />
     <ClCompile Include="BaseTelemetryContext.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TelemetryClient.h" />
@@ -261,6 +262,7 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="BaseTelemetryContext.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="contracts">

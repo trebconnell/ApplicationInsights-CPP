@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #if _WIN32
 #include <windows.h>
 #if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP

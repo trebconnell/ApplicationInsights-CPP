@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ExceptionData.h"
 
 using namespace ApplicationInsights::core;

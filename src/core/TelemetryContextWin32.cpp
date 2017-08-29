@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TelemetryContext.h"
 #include "common/Utils.h"
 #include <codecvt>

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "StackFrame.h"
 
 using namespace ApplicationInsights::core;

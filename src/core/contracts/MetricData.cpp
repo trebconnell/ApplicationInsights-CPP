@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "MetricData.h"
 
 using namespace ApplicationInsights::core;

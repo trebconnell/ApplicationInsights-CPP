@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "CrashDataBinary.h"
 
 using namespace ApplicationInsights::core;

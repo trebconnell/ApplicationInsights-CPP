@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "MessageData.h"
 
 using namespace ApplicationInsights::core;

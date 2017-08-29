@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Envelope.h"
 
 using namespace ApplicationInsights::core;

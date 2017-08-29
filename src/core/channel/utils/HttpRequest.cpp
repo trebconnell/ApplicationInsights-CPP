@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "HttpRequest.h"
 #include "../../common/Utils.h"
 #include <algorithm>
