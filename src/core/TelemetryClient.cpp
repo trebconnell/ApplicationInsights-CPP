@@ -240,21 +240,6 @@ void TelemetryClient::Track(Domain& telemetry)
 	}
 }
 
-void TelemetryClient::SetOperationID(const std::wstring& opID)
-{
-    m_opID = opID;
-}
-
-void TelemetryClient::PushParentID(const std::wstring& parentID)
-{
-    m_parentIds.emplace_back(parentID);
-}
-
-void TelemetryClient::PopParentID()
-{
-    m_parentIds.pop_back();
-}
-
 /// <summary>
 /// Flushes this instance.
 /// </summary>

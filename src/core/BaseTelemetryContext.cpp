@@ -63,6 +63,26 @@ void BaseTelemetryContext::InitDevice()
     device.SetMachineName(machineName);
 }
 
+void BaseTelemetryContext::SetOperationID(const std::wstring& opID)
+{
+    m_opID = opID;
+}
+
+void BaseTelemetryContext::SetOperationName(const std::wstring& opName)
+{
+    m_opName = opName;
+}
+
+void BaseTelemetryContext::PushParentID(const std::wstring& parentID)
+{
+    m_parentIds.emplace_back(parentID);
+}
+
+void BaseTelemetryContext::PopParentID()
+{
+    m_parentIds.pop_back();
+}
+
 /// <summary>
 /// Initializes the application.
 /// </summary>
@@ -130,6 +150,20 @@ RESULT BaseTelemetryContext::GetContextTags(wstring_wstring_map& tags)
     AddToMapIfHasValue(tags, L"ai.application.ver", app.GetVer());
 
     AddToMapIfHasValue(tags, L"ai.session.id", session.GetId());
+
+    if (!m_parentIds.empty())
+    {
+        tags[L"ai.operation.parentId"] = m_parentIds.back();
+    }
+    if (!m_opID.empty())
+    {
+        tags[L"ai.operation.id"] = m_opID;
+    }
+    if (!m_opName.empty())
+    {
+        tags[L"ai.operation.name"] = m_opName;
+    }
+
     AddToMapIfHasValue(tags, L"ai.session.isFirst", session.GetIsFirst());
     AddToMapIfHasValue(tags, L"ai.session.isNew", session.GetIsNew());
 

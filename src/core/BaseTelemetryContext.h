@@ -57,6 +57,11 @@ namespace ApplicationInsights
 			Session& GetSession() { return session; }
 			const Session& GetSession() const { return session; }
 
+            void SetOperationName(const std::wstring& opName);
+            void SetOperationID(const std::wstring& opID);
+            void PushParentID(const std::wstring& parentID);
+            void PopParentID();
+
 			/// <summary>
 			/// Renews the session.
 			/// </summary>
@@ -95,6 +100,10 @@ namespace ApplicationInsights
 			Application app;
 			Session session;
 			std::wstring m_iKey;
+
+            std::wstring m_opName;
+            std::wstring m_opID;
+            std::vector<std::wstring> m_parentIds;
 		};
 	}
 }

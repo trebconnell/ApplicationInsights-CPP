@@ -1,5 +1,6 @@
 #include "../../src/core/TelemetryClient.h"
 #include <chrono>
+#include "../../src/core/common/Utils.h"
 #pragma comment(lib, "G:/devl/appi/x64/Debug/AppInsights.lib")
 
 using namespace ApplicationInsights::core;
@@ -11,54 +12,56 @@ std::wstring ToWStr(const wchar_t* str)
 
 std::wstring GetTimeStr()
 {
-    auto time = std::chrono::system_clock::now().time_since_epoch();
-    auto timeMsTotal = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
+    //auto time = std::chrono::system_clock::now().time_since_epoch();
+    //auto timeMsTotal = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
 
-    auto getTimePart = [&](unsigned mult)
-    {
-        auto timePart = timeMsTotal % mult;
-        timeMsTotal /= mult;
-        return (unsigned)timePart;
-    };
-    auto timeMs = getTimePart(1000000);
-    auto timeS = getTimePart(60);
-    auto timeM = getTimePart(60);
-    auto timeH = getTimePart(12);
-    // TODO: won't work with months not having 31 days.
-    auto timeD = getTimePart(31);
+    //auto getTimePart = [&](unsigned mult)
+    //{
+    //    auto timePart = timeMsTotal % mult;
+    //    timeMsTotal /= mult;
+    //    return (unsigned)timePart;
+    //};
+    //auto timeMs = getTimePart(1000000);
+    //auto timeS = getTimePart(60);
+    //auto timeM = getTimePart(60);
+    //auto timeH = getTimePart(12);
+    //// TODO: won't work with months not having 31 days.
+    //auto timeD = getTimePart(31);
 
-    wchar_t timeBuf[256];
-    //                                     DD   .HH   :MM   :SS   .MMMMMM
-    swprintf_s(timeBuf, L"%0u.2.%0u.2:%0u.2:%0u.2.%u.6", timeD, timeH, timeM, timeS, timeMs);
+    //wchar_t timeBuf[256];
+    ////                                     DD   .HH   :MM   :SS   .MMMMMM
+    //swprintf_s(timeBuf, L"%02u.%02u:%02u:%02u.%-6u", timeD, timeH, timeM, timeS, timeMs);
 
-    return timeBuf;
+    return Utils::GetCurrentDateTime();
 }
 
 int main()
 {
     std::wstring ikey = L"f91ebe0b-17ca-47c4-8397-140bb6680399";
+
     TelemetryClient client(ikey);
 
     for (auto i = 0u; i < 5; ++i)
     {
-        //{
-        //    Operation op;
-        //    op.SetId(ToWStr(L"op") + std::to_wstring(i));
-        //    op.SetName(ToWStr(L"opname"));
+        {
+            //Operation op;
+            //op.SetId(ToWStr(L"op") + std::to_wstring(i));
+            //op.SetName(ToWStr(L"opname"));
 
-        //    client.Track(op);
-        //    client.SetOperationID(op.GetId());
-        //}
+            //client.Track(op);
+            client.GetContext()->SetOperationName(ToWStr(L"opname"));
+            client.GetContext()->SetOperationID(ToWStr(L"op") + std::to_wstring(i));
+        }
 
         auto reqTime = GetTimeStr();
         auto reqID = ToWStr(L"req") + std::to_wstring(i / 2);
-        //client.PushParentID(reqID);
+        client.GetContext()->PushParentID(reqID);
 
-        //{
-        //    EventData eventData;
-        //    eventData.SetName(ToWStr(L"TestOpEvent"));
-        //    client.Track(eventData);
-        //}
+        {
+            EventData eventData;
+            eventData.SetName(ToWStr(L"TestOpEvent"));
+            client.Track(eventData);
+        }
 
         {
             wchar_t msg[256];
@@ -88,7 +91,7 @@ int main()
             request.SetDuration(L"00.00:00:00.300000");
             request.SetResponseCode(L"100");
             request.SetStartTime(reqTime);
-            client.PopParentID();
+            client.GetContext()->PopParentID();
             client.Track(request);
         }
 
