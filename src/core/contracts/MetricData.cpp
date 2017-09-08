@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MetricData.h"
+#include "Inc/contracts/MetricData.h"
 
 using namespace ApplicationInsights::core;
 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "StreamWriter.h"
-#include "Serializer.h"
+#include "Inc/common/StreamWriter.h"
+#include "Inc/common/Serializer.h"
 
 using namespace ApplicationInsights::core;
 

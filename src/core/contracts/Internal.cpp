@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Internal.h"
+#include "Inc/contracts/Internal.h"
 
 using namespace ApplicationInsights::core;
 

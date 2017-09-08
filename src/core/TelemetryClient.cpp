@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "TelemetryClient.h"
-#include "common/Utils.h"
+#include "Inc/TelemetryClient.h"
+#include "Inc/common/Utils.h"
 
 #if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone

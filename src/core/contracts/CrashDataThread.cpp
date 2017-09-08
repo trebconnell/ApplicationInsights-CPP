@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "CrashDataThread.h"
+#include "Inc/contracts/CrashDataThread.h"
 
 using namespace ApplicationInsights::core;
 

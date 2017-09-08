@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Envelope.h"
+#include "Inc/contracts/Envelope.h"
 
 using namespace ApplicationInsights::core;
 

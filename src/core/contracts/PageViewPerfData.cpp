@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "PageViewPerfData.h"
+#include "Inc/contracts/PageViewPerfData.h"
 
 using namespace ApplicationInsights::core;
 

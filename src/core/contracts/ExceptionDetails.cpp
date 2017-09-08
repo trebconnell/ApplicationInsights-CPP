@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ExceptionDetails.h"
+#include "Inc/contracts/ExceptionDetails.h"
 
 using namespace ApplicationInsights::core;
 

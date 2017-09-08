@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "HttpRequest.h"
-#include "../../common/Utils.h"
+#include "Inc/channel/utils/HttpRequest.h"
+#include "../../Inc/common/Utils.h"
 #include <algorithm>
 #include <locale>
 #include <codecvt>

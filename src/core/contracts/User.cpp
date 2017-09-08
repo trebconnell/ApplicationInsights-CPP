@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "User.h"
-#include "../common/Utils.h"
+#include "Inc/contracts/User.h"
+#include "../Inc/common/Utils.h"
 
 using namespace ApplicationInsights::core;
 

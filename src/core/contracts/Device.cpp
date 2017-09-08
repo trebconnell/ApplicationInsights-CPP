@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Device.h"
+#include "Inc/contracts/Device.h"
 
 using namespace ApplicationInsights::core;
 

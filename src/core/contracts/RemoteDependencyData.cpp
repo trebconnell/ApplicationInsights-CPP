@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "RemoteDependencyData.h"
+#include "Inc/contracts/RemoteDependencyData.h"
 
 using namespace ApplicationInsights::core;
 

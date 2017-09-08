@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "HttpResponse.h"
+#include "Inc/channel/utils/HttpResponse.h"
 
 using namespace ApplicationInsights::core;
 

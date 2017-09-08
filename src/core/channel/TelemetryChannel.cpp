@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "TelemetryChannel.h"
-#include "../TelemetryContext.h"
-#include "../Contracts/Contracts.h"
-#include "../Common/Utils.h"
-#include "../Common/StringWriter.h"
+#include "Inc/channel/TelemetryChannel.h"
+#include "Inc/TelemetryContext.h"
+#include "Inc/Contracts/Contracts.h"
+#include "Inc/common/Utils.h"
+#include "Inc/common/StringWriter.h"
 #include <stdlib.h> 
 #include <time.h>
 #include <locale>

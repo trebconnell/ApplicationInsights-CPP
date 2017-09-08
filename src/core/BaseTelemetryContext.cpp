@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "BaseTelemetryContext.h"
-#include "Common/Utils.h"
+#include "Inc/BaseTelemetryContext.h"
+#include "Inc/common/Utils.h"
 
 using namespace ApplicationInsights::core;
 

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "StackFrame.h"
+#include "Inc/contracts/StackFrame.h"
 
 using namespace ApplicationInsights::core;
 

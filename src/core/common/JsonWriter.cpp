@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "StreamWriter.h"
-#include "JsonWriter.h"
+#include "Inc/common/StreamWriter.h"
+#include "Inc/common/JsonWriter.h"
 
 using namespace ApplicationInsights::core;
 
