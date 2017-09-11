@@ -1,7 +1,7 @@
 #ifndef HTTPHEADERFIELD_H
 #define HTTPHEADERFIELD_H
 
-#include "../../Inc/common/Common.h"
+#include "Inc/common/Common.h"
 #include <string>
 namespace ApplicationInsights
 {

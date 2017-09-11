@@ -1,10 +1,10 @@
 #ifndef MESSAGEDATA_H
 #define MESSAGEDATA_H
 
-#include "../Inc/common/Common.h"
-#include "../Inc/common/JsonWriter.h"
-#include "../Inc/common/Nullable.h"
-#include "../Inc/common/Serializer.h"
+#include "Inc/common/Common.h"
+#include "Inc/common/JsonWriter.h"
+#include "Inc/common/Nullable.h"
+#include "Inc/common/Serializer.h"
 #include "Domain.h"
 #include "SeverityLevel.h"
 #include <map>

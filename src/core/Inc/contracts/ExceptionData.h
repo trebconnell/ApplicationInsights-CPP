@@ -1,10 +1,10 @@
 #ifndef EXCEPTIONDATA_H
 #define EXCEPTIONDATA_H
 
-#include "../Inc/common/Common.h"
-#include "../Inc/common/JsonWriter.h"
-#include "../Inc/common/Nullable.h"
-#include "../Inc/common/Serializer.h"
+#include "Inc/common/Common.h"
+#include "Inc/common/JsonWriter.h"
+#include "Inc/common/Nullable.h"
+#include "Inc/common/Serializer.h"
 #include "Domain.h"
 #include "ExceptionDetails.h"
 #include "SeverityLevel.h"

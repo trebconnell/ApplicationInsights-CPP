@@ -1,10 +1,10 @@
 #ifndef PAGEVIEWPERFDATA_H
 #define PAGEVIEWPERFDATA_H
 
-#include "../Inc/common/Common.h"
-#include "../Inc/common/JsonWriter.h"
-#include "../Inc/common/Nullable.h"
-#include "../Inc/common/Serializer.h"
+#include "Inc/common/Common.h"
+#include "Inc/common/JsonWriter.h"
+#include "Inc/common/Nullable.h"
+#include "Inc/common/Serializer.h"
 #include "PageViewData.h"
 #include <map>
 #include <string>

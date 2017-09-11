@@ -1,10 +1,10 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include "../Inc/common/Common.h"
-#include "../Inc/common/JsonWriter.h"
-#include "../Inc/common/Nullable.h"
-#include "../Inc/common/Serializer.h"
+#include "Inc/common/Common.h"
+#include "Inc/common/JsonWriter.h"
+#include "Inc/common/Nullable.h"
+#include "Inc/common/Serializer.h"
 #include "Base.h"
 #include "Domain.h"
 #include <map>

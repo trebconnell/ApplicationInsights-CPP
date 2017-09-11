@@ -1,10 +1,10 @@
 #ifndef EXCEPTIONDETAILS_H
 #define EXCEPTIONDETAILS_H
 
-#include "../Inc/common/Common.h"
-#include "../Inc/common/JsonWriter.h"
-#include "../Inc/common/Nullable.h"
-#include "../Inc/common/Serializer.h"
+#include "Inc/common/Common.h"
+#include "Inc/common/JsonWriter.h"
+#include "Inc/common/Nullable.h"
+#include "Inc/common/Serializer.h"
 #include "StackFrame.h"
 #include <map>
 #include <string>

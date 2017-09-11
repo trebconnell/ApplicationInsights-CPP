@@ -1,10 +1,10 @@
 #ifndef CRASHDATA_H
 #define CRASHDATA_H
 
-#include "../Inc/common/Common.h"
-#include "../Inc/common/JsonWriter.h"
-#include "../Inc/common/Nullable.h"
-#include "../Inc/common/Serializer.h"
+#include "Inc/common/Common.h"
+#include "Inc/common/JsonWriter.h"
+#include "Inc/common/Nullable.h"
+#include "Inc/common/Serializer.h"
 #include "CrashDataBinary.h"
 #include "CrashDataHeaders.h"
 #include "CrashDataThread.h"
