@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <ctime>
 #include <wchar.h>
+#include <Lmcons.h>
 #include <sys/timeb.h>
 
 #ifdef WIN32

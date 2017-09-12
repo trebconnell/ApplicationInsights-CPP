@@ -12,7 +12,7 @@ using namespace ApplicationInsights::core;
 /// <param name="iKey">The i key.</param>
 BaseTelemetryContext::BaseTelemetryContext(const std::wstring& iKey)
 {
-	m_iKey = iKey;
+    m_iKey = iKey;
 }
 
 /// <summary>
@@ -27,10 +27,10 @@ BaseTelemetryContext::~BaseTelemetryContext()
 /// </summary>
 void BaseTelemetryContext::InitContext()
 {
-	InitUser();
-	InitDevice();
-	InitApplication();
-	InitSession();
+    InitUser();
+    InitDevice();
+    InitApplication();
+    InitSession();
 }
 
 /// <summary>
@@ -38,10 +38,17 @@ void BaseTelemetryContext::InitContext()
 /// </summary>
 void BaseTelemetryContext::InitUser()
 {
-	Nullable<std::wstring> uuid = std::wstring(L"Treb");
-	Nullable<std::wstring> date = Utils::GetCurrentDateTime();
-	user.SetId(uuid);
-	user.SetAccountAcquisitionDate(date);
+    //TODO: anonymize username
+    wchar_t userName[UNLEN + 1];
+    DWORD userNameLength = _countof(userName);
+    if (!GetUserNameW(userName, &userNameLength))
+    {
+        userName[0] = '\0';
+    }
+    Nullable<std::wstring> uuid = std::wstring(userName);
+    Nullable<std::wstring> date = Utils::GetCurrentDateTime();
+    user.SetId(uuid);
+    user.SetAccountAcquisitionDate(date);
 }
 
 
@@ -50,16 +57,21 @@ void BaseTelemetryContext::InitUser()
 /// </summary>
 void BaseTelemetryContext::InitDevice()
 {
-	Nullable<std::wstring> strOs;
-	strOs.SetValue(L"Windows");
-	device.SetOs(strOs);
+    //TODO: https://sourceforge.net/p/predef/wiki/OperatingSystems/
+    Nullable<std::wstring> strOs;
+    strOs.SetValue(L"Windows");
+    device.SetOs(strOs);
 
-	Nullable<std::wstring> strType;
-	strType.SetValue(L"Other");
-	device.SetType(strType);
+    Nullable<std::wstring> strType;
+    strType.SetValue(L"Other");
+    device.SetType(strType);
 
+    //TODO: anonymize machine name
     Nullable<std::wstring> machineName;
-    machineName.SetValue(L"treborc-dev");
+    TCHAR computerName[MAX_COMPUTERNAME_LENGTH + 1];
+    DWORD size = sizeof(computerName) / sizeof(computerName[0]);
+    GetComputerName(computerName, &size);
+    machineName.SetValue(std::wstring(computerName));
     device.SetMachineName(machineName);
 }
 
@@ -88,7 +100,7 @@ void BaseTelemetryContext::PopParentID()
 /// </summary>
 void BaseTelemetryContext::InitApplication()
 {
-	//TODO
+    //TODO
 }
 
 /// <summary>
@@ -96,12 +108,12 @@ void BaseTelemetryContext::InitApplication()
 /// </summary>
 void BaseTelemetryContext::InitSession()
 {
-	Nullable<std::wstring> sessionId = Utils::GenerateRandomUUID();
-	session.SetId(sessionId);
+    Nullable<std::wstring> sessionId = Utils::GenerateRandomUUID();
+    session.SetId(sessionId);
 
-	Nullable<std::wstring> strTrue = std::wstring(L"True");
-	session.SetIsFirst(strTrue);
-	session.SetIsNew(strTrue);
+    Nullable<std::wstring> strTrue = std::wstring(L"True");
+    session.SetIsFirst(strTrue);
+    session.SetIsNew(strTrue);
 }
 
 /// <summary>
@@ -109,13 +121,13 @@ void BaseTelemetryContext::InitSession()
 /// </summary>
 void BaseTelemetryContext::RenewSession()
 {
-	Nullable<std::wstring> sessionId = Utils::GenerateRandomUUID();
-	session.SetId(sessionId);
+    Nullable<std::wstring> sessionId = Utils::GenerateRandomUUID();
+    session.SetId(sessionId);
 
-	Nullable<std::wstring> strTrue = std::wstring(L"True");
-	Nullable<std::wstring> strFalse = std::wstring(L"False");
-	session.SetIsFirst(strFalse);
-	session.SetIsNew(strTrue);
+    Nullable<std::wstring> strTrue = std::wstring(L"True");
+    Nullable<std::wstring> strFalse = std::wstring(L"False");
+    session.SetIsFirst(strFalse);
+    session.SetIsNew(strTrue);
 }
 
 /// <summary>
@@ -125,7 +137,7 @@ void BaseTelemetryContext::RenewSession()
 /// <returns>RESULT_OK if succedded</returns>
 RESULT BaseTelemetryContext::GetContextTags(wstring_wstring_map& tags)
 {
-	tags.clear();
+    tags.clear();
 
     AddToMapIfHasValue(tags, L"ai.user.accountAcquisitionDate", user.GetAccountAcquisitionDate());
     AddToMapIfHasValue(tags, L"ai.user.accountId", user.GetAccountId());
@@ -167,5 +179,5 @@ RESULT BaseTelemetryContext::GetContextTags(wstring_wstring_map& tags)
     AddToMapIfHasValue(tags, L"ai.session.isFirst", session.GetIsFirst());
     AddToMapIfHasValue(tags, L"ai.session.isNew", session.GetIsNew());
 
-	return RESULT_OK;
+    return RESULT_OK;
 }
