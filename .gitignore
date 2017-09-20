@@ -83,3 +83,7 @@ ssl/
 .deps/
 *.opendb
 *.db
+
+*.nupkg
+**/packages/
+*.db*
