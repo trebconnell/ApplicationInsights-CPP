@@ -1,8 +1,6 @@
 #ifndef TELEMETRYCHANNEL_H
 #define TELEMETRYCHANNEL_H
 
-#include <string>
-#include <list>
 #include "TelemetryClientConfig.h"
 #include "TelemetryContext.h"
 #include "Contracts/Contracts.h"
@@ -53,6 +51,9 @@ namespace ApplicationInsights
             std::vector<std::wstring> m_buffer;
 
             HttpResponse resp;
+
+        private:
+            std::vector<Concurrency::task<void>> m_tasks;
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
