@@ -14,6 +14,21 @@ using namespace Concurrency;
 
 const int MAX_BUFFER_SIZE = 100;
 
+class RequestTracker
+{
+public: 
+    RequestTracker()
+    {
+    }
+
+    ~RequestTracker()
+    {
+        auto joinTask = when_all(begin(m_tasks), end(m_tasks));
+        joinTask.wait();
+    }
+    std::vector<Concurrency::task<void>> m_tasks;
+};
+
 /// <summary>
 /// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
 /// </summary>
@@ -25,6 +40,7 @@ TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config)
     m_channelId = rand();
     m_seqNum = 0;
     m_maxBufferSize = MAX_BUFFER_SIZE;
+    m_requestTracker = new RequestTracker();
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
@@ -38,8 +54,7 @@ TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config)
 /// </summary>
 TelemetryChannel::~TelemetryChannel()
 {
-    auto joinTask = when_all(begin(m_tasks), end(m_tasks));
-    joinTask.wait();
+    delete m_requestTracker;
 }
 
 /// <summary>
@@ -140,7 +155,7 @@ void TelemetryChannel::Send()
     if (tempBuff.size() != 0)
     {
         auto t = InternalSend(tempBuff);
-        m_tasks.emplace_back(t);
+        m_requestTracker->m_tasks.emplace_back(t);
     }
     m_buffer.clear();
 }

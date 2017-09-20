@@ -13,6 +13,7 @@
 #endif 
 #endif
 
+class RequestTracker;
 namespace ApplicationInsights
 {
     namespace core
@@ -49,11 +50,8 @@ namespace ApplicationInsights
             int m_maxBufferSize;
             TelemetryClientConfig *m_config;
             std::vector<std::wstring> m_buffer;
-
+            RequestTracker* m_requestTracker;
             HttpResponse resp;
-
-        private:
-            std::vector<Concurrency::task<void>> m_tasks;
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
