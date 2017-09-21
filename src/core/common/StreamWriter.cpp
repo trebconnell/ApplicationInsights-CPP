@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <wchar.h>
-#include "StreamWriter.h"
+#include "Inc/common/StreamWriter.h"
 #include "string.h"
 
 using namespace ApplicationInsights::core;

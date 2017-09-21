@@ -14,7 +14,12 @@
 #include <stdint.h>
 #include <ctime>
 #include <wchar.h>
+#include <Lmcons.h>
 #include <sys/timeb.h>
+#include <ppl.h>
+#include <ppltasks.h>
+#include <concurrent_queue.h>
+#include <concurrent_vector.h>
 
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN

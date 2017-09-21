@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "TelemetryContext.h"
-#include "common/Utils.h"
+#include "Inc/TelemetryContext.h"
+#include "Inc/common/Utils.h"
 #include <codecvt>
 #include <locale>
 

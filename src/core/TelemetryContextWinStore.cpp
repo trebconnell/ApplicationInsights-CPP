@@ -5,7 +5,7 @@
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 
 #include <windows.h>
-#include "Common/Utils.h"
+#include "Inc/common/Utils.h"
 
 using namespace ApplicationInsights::core;
 

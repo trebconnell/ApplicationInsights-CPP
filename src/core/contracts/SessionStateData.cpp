@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "SessionStateData.h"
+#include "Inc/contracts/SessionStateData.h"
 
 using namespace ApplicationInsights::core;
 

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "EventData.h"
+#include "Inc/contracts/EventData.h"
 
 using namespace ApplicationInsights::core;
 

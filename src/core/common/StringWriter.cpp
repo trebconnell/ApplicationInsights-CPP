@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "StringWriter.h"
-#include "Utils.h"
+#include "Inc/common/StringWriter.h"
+#include "Inc/common/Utils.h"
 #include <stdio.h>
 
 using namespace ApplicationInsights::core;

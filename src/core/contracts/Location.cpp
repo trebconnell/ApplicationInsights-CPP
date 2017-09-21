@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Location.h"
+#include "Inc/contracts/Location.h"
 
 using namespace ApplicationInsights::core;
 

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DataPoint.h"
+#include "Inc/contracts/DataPoint.h"
 
 using namespace ApplicationInsights::core;
 

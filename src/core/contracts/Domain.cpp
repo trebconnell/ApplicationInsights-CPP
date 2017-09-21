@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Domain.h"
+#include "Inc/contracts/Domain.h"
 
 using namespace ApplicationInsights::core;
 

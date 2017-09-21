@@ -1,7 +1,6 @@
-#include "../../src/core/TelemetryClient.h"
+#include "Inc/TelemetryClient.h"
 #include <chrono>
-#include "../../src/core/common/Utils.h"
-#pragma comment(lib, "G:/devl/appi/x64/Debug/AppInsights.lib")
+#include "Inc/common/Utils.h"
 
 using namespace ApplicationInsights::core;
 

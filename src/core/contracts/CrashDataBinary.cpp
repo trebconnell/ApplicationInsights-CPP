@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "CrashDataBinary.h"
+#include "Inc/contracts/CrashDataBinary.h"
 
 using namespace ApplicationInsights::core;
 

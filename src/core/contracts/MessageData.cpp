@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MessageData.h"
+#include "Inc/contracts/MessageData.h"
 
 using namespace ApplicationInsights::core;
 
