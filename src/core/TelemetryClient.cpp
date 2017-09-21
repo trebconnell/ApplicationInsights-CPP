@@ -26,7 +26,7 @@ TelemetryClient::TelemetryClient(std::wstring& iKey)
     m_config = std::make_unique<TelemetryClientConfig>(iKey);
     m_context = std::make_unique<TelemetryContext>(iKey);
     m_context->InitContext();
-    m_channel = std::make_unique<TelemetryChannel>(*m_config);
+    m_channel.reset(TelemetryChannelFactory::CreateTelemetryChannel(*m_config));
 }
 
 /// <summary>
@@ -44,8 +44,10 @@ TelemetryClient::TelemetryClient(TelemetryClientConfig &config, TelemetryContext
 /// </summary>
 TelemetryClient::~TelemetryClient()
 {
-    // Flush any pending data
-    Flush();
+    if (m_channel)
+    {
+        m_channel->FlushAll();
+    }
 }
 
 /// <summary>
@@ -247,7 +249,7 @@ void TelemetryClient::Flush()
 {
     if (m_channel)
     {
-        m_channel->Send();
+        m_channel->SendAsync();
     }
 }
 

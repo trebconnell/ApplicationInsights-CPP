@@ -36,11 +36,11 @@ std::wstring GetTimeStr()
 
 int main()
 {
-    std::wstring ikey = L"f91ebe0b-17ca-47c4-8397-140bb6680399";
+    std::wstring ikey = L"169b3c1b-3020-4c58-acab-83e36df4c831";
 
-    TelemetryClient client(ikey);
+    TelemetryClient* client = new TelemetryClient(ikey);
 
-    for (auto i = 0u; i < 5; ++i)
+    for (auto i = 0u; i < 100; ++i)
     {
         {
             //Operation op;
@@ -48,74 +48,83 @@ int main()
             //op.SetName(ToWStr(L"opname"));
 
             //client.Track(op);
-            client.GetContext()->SetOperationName(ToWStr(L"opname"));
-            client.GetContext()->SetOperationID(ToWStr(L"op") + std::to_wstring(i));
+            client->GetContext()->SetOperationName(ToWStr(L"opname"));
+            client->GetContext()->SetOperationID(ToWStr(L"op") + std::to_wstring(i));
         }
 
         auto reqTime = GetTimeStr();
         auto reqID = ToWStr(L"req") + std::to_wstring(i / 2);
-        client.GetContext()->PushParentID(reqID);
+        client->GetContext()->PushParentID(reqID);
 
         {
             EventData eventData;
             eventData.SetName(ToWStr(L"TestOpEvent"));
-            client.Track(eventData);
+            client->Track(eventData);
+            client->Flush();
         }
-
-        {
-            wchar_t msg[256];
-            swprintf_s(msg, L"Fun trace message test %u", i);
-
-            MessageData traceData;
-            traceData.SetMessage(ToWStr(msg));
-            traceData.SetSeverityLevel(i == 3 ? SeverityLevel::Warning : SeverityLevel::Information);
-            client.Track(traceData);
-        }
-
-        {
-            wchar_t msg[256];
-            swprintf_s(msg, L"Fun generic trace msg");
-
-            MessageData traceData;
-            traceData.SetMessage(ToWStr(msg));
-            traceData.SetSeverityLevel(i == 4 ? SeverityLevel::Error : SeverityLevel::Information);
-            client.Track(traceData);
-        }
-
-        {
-            RequestData request;
-            request.SetName(ToWStr(L"TestOpRequest"));
-            request.SetId(reqID);
-            request.SetSuccess(i == 4 ? false : true);
-            request.SetDuration(L"00.00:00:00.300000");
-            request.SetResponseCode(L"100");
-            request.SetStartTime(reqTime);
-            client.GetContext()->PopParentID();
-            client.Track(request);
-        }
-
-        {
-            wchar_t msg[256];
-            swprintf_s(msg, L"Trace outside request");
-
-            MessageData traceData;
-            traceData.SetMessage(ToWStr(msg));
-            traceData.SetSeverityLevel(SeverityLevel::Information);
-            client.Track(traceData);
-        }
-
-        //client.SetOperationID(L"");
     }
 
-    {
-        wchar_t msg[256];
-        swprintf_s(msg, L"Trace outside everything");
+    //    {
+    //        wchar_t msg[256];
+    //        swprintf_s(msg, L"Fun trace message test %u", i);
 
-        MessageData traceData;
-        traceData.SetMessage(ToWStr(msg));
-        traceData.SetSeverityLevel(SeverityLevel::Information);
-        client.Track(traceData);
-    }
+    //        MessageData traceData;
+    //        traceData.SetMessage(ToWStr(msg));
+    //        traceData.SetSeverityLevel(i == 3 ? SeverityLevel::Warning : SeverityLevel::Information);
+    //        client.Track(traceData);
+    //    }
 
-    client.Flush();
+    //    {
+    //        wchar_t msg[256];
+    //        swprintf_s(msg, L"Fun generic trace msg");
+
+    //        MessageData traceData;
+    //        traceData.SetMessage(ToWStr(msg));
+    //        traceData.SetSeverityLevel(i == 4 ? SeverityLevel::Error : SeverityLevel::Information);
+    //        client.Track(traceData);
+    //    }
+
+    //    {
+    //        RequestData request;
+    //        request.SetName(ToWStr(L"TestOpRequest"));
+    //        request.SetId(reqID);
+    //        request.SetSuccess(i == 4 ? false : true);
+    //        request.SetDuration(L"00.00:00:00.300000");
+    //        request.SetResponseCode(L"100");
+    //        request.SetStartTime(reqTime);
+    //        client.GetContext()->PopParentID();
+    //        client.Track(request);
+    //    }
+
+    //    {
+    //        wchar_t msg[256];
+    //        swprintf_s(msg, L"Trace outside request");
+
+    //        MessageData traceData;
+    //        traceData.SetMessage(ToWStr(msg));
+    //        traceData.SetSeverityLevel(SeverityLevel::Information);
+    //        client.Track(traceData);
+    //    }
+
+    //    //client.SetOperationID(L"");
+    //}
+
+    //{
+    //    wchar_t msg[256];
+    //    swprintf_s(msg, L"Trace outside everything");
+
+    //    MessageData traceData;
+    //    traceData.SetMessage(ToWStr(msg));
+    //    traceData.SetSeverityLevel(SeverityLevel::Information);
+    //    client.Track(traceData);
+    //}
+
+    
+    client->Flush();
+
+    EventData eventData;
+    eventData.SetName(ToWStr(L"TestOpEventFinal"));
+    client->Track(eventData);
+    client->Flush();
+    delete client;
 }
