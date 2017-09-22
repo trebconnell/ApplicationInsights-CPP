@@ -29,7 +29,7 @@ public:
         m_seqNum = 0;
         m_maxBufferSize = MAX_BUFFER_SIZE;
 
-        Concurrency::SchedulerPolicy policy(1, Concurrency::MaxConcurrency, 1);
+        Concurrency::SchedulerPolicy policy(1, Concurrency::MaxConcurrency, 2);
         CurrentScheduler::Create(policy);
     }
 
