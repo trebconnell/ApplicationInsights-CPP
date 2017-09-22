@@ -29,11 +29,8 @@ public:
         m_seqNum = 0;
         m_maxBufferSize = MAX_BUFFER_SIZE;
 
-#ifdef WINAPI_FAMILY_PARTITION
-#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-        hRespRecv = CreateEventEx(nullptr, L"RecvResp", 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
-#endif
-#endif
+        Concurrency::SchedulerPolicy policy(1, Concurrency::MaxConcurrency, 1);
+        CurrentScheduler::Create(policy);
     }
 
     /// <summary>
@@ -87,21 +84,20 @@ public:
 
         if (tempBuff.size() != 0)
         {
-            auto t = InternalSend(tempBuff);
-            m_tasks.push_back(t);
+            InternalSend(tempBuff);
         }
         m_buffer.clear();
     }
 
-    void FlushAll() override
+    void Send() override
     {
-        auto joinTask = when_all(begin(m_tasks), end(m_tasks));
-        joinTask.wait();
+        SendAsync();
+        m_tasks.wait(); //catch up on all outstanding tasks
     }
 
-    Concurrency::task<void> InternalSend(std::vector<std::wstring> &buffer)
+    void InternalSend(std::vector<std::wstring> &buffer)
     {
-        return create_task([buffer]()
+        m_tasks.run([buffer]()
         {
             if (buffer.size() > 0)
             {
@@ -114,10 +110,8 @@ public:
                     bufferStr += L"]";
                 }
 
-#ifdef CPP_LIB_DEBUG
                 std::wstring req = L"REQUEST :\r\n" + bufferStr;
                 Utils::WriteDebugLine(req);
-#endif
                 HttpRequest request(HTTP_REQUEST_METHOD::POST, L"dc.services.visualstudio.com", L"/v2/track", bufferStr);
                 request.GetHeaderFields().SetField(L"Content-Type", L"application/json");
 
@@ -133,13 +127,6 @@ public:
                     {
                         //TODO: log
                     }
-#ifdef _DEBUG
-#ifdef WINAPI_FAMILY_PARTITION
-#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-                    SetEvent(hRespRecv);
-#endif
-#endif
-#endif
                 });
             }
         });
@@ -151,15 +138,7 @@ private:
     int m_maxBufferSize;
     TelemetryClientConfig *m_config;
     std::vector<std::wstring> m_buffer;
-    concurrent_vector<task<void>> m_tasks;
-    RequestTracker* m_requestTracker;
-    HttpResponse resp;
-
-#ifdef WINAPI_FAMILY_PARTITION
-#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-    HANDLE hRespRecv;
-#endif
-#endif
+    task_group m_tasks;
 };
 
 ITelemetryChannel* TelemetryChannelFactory::CreateTelemetryChannel(TelemetryClientConfig &config)

@@ -129,6 +129,11 @@ namespace ApplicationInsights
             void Track(Domain& telemetry);
 
             /// <summary>
+            /// Flushes this instance.asynchronously
+            /// </summary>
+            void FlushAsync();
+
+            /// <summary>
             /// Flushes this instance.
             /// </summary>
             void Flush();

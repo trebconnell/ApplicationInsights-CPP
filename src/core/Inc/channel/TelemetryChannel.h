@@ -32,7 +32,10 @@ namespace ApplicationInsights
             /// </summary>
             virtual void SendAsync() = 0;
 
-            virtual void FlushAll() = 0;
+            /// <summary>
+            /// Sends synchronously
+            /// </summary>
+            virtual void Send() = 0;
         };
 
         struct TELEMETRYCLIENT_API TelemetryChannelFactory

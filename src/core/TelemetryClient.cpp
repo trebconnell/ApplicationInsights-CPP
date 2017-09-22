@@ -44,10 +44,6 @@ TelemetryClient::TelemetryClient(TelemetryClientConfig &config, TelemetryContext
 /// </summary>
 TelemetryClient::~TelemetryClient()
 {
-    if (m_channel)
-    {
-        m_channel->FlushAll();
-    }
 }
 
 /// <summary>
@@ -245,11 +241,22 @@ void TelemetryClient::Track(Domain& telemetry)
 /// <summary>
 /// Flushes this instance.
 /// </summary>
-void TelemetryClient::Flush()
+void TelemetryClient::FlushAsync()
 {
     if (m_channel)
     {
         m_channel->SendAsync();
+    }
+}
+
+/// <summary>
+/// Flushes this instance.
+/// </summary>
+void TelemetryClient::Flush()
+{
+    if (m_channel)
+    {
+        m_channel->Send();
     }
 }
 
