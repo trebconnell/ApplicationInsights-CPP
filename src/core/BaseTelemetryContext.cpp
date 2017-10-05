@@ -43,7 +43,7 @@ void BaseTelemetryContext::InitUser()
     DWORD userNameLength = _countof(userName);
     if (!GetUserNameW(userName, &userNameLength))
     {
-        userName[0] = '\0';
+        userName[0] = L'\0';
     }
     Nullable<std::wstring> uuid = std::wstring(userName);
     Nullable<std::wstring> date = Utils::GetCurrentDateTime();
