@@ -77,8 +77,6 @@ void BaseTelemetryContext::InitDevice()
     strType.SetValue(L"Other");
     m_device.SetType(strType);
 
-    m_device.set
-
     //TODO: anonymize machine name
     Nullable<std::wstring> machineName;
     TCHAR computerName[MAX_COMPUTERNAME_LENGTH + 1];
