@@ -34,18 +34,29 @@ void BaseTelemetryContext::InitContext()
 }
 
 /// <summary>
-/// Initializes the user context.
+/// Initializes the user context. Checks for existence of SYNTHETICS_SESSION_USER_ID for multi-node cases. Otherwise default to local user name
 /// </summary>
 void BaseTelemetryContext::InitUser()
 {
-    //TODO: anonymize username
-    wchar_t userName[UNLEN + 1];
-    DWORD userNameLength = _countof(userName);
-    if (!GetUserNameW(userName, &userNameLength))
+    std::wstring sessionUser;
+    wchar_t sessionUserName[512];
+    wchar_t userName[512];
+    DWORD userNameLength = 512;
+
+    if (GetEnvironmentVariableW(L"SYNTHETICS_SESSION_USER_ID", sessionUserName, userNameLength)) // couldn't retrieve synthetics session user id
     {
-        userName[0] = '\0';
+        sessionUser = sessionUserName;
     }
-    Nullable<std::wstring> uuid = std::wstring(userName);
+    else
+    {
+        if (!GetUserNameW(userName, &userNameLength)) // check for local user name
+        {
+            userName[0] = '\0';
+        }
+        sessionUser = userName;
+    }
+
+    Nullable<std::wstring> uuid = std::wstring(sessionUser);
     Nullable<std::wstring> date = Utils::GetCurrentDateTime();
     m_user.SetId(uuid);
     m_user.SetAccountAcquisitionDate(date);
@@ -57,7 +68,7 @@ void BaseTelemetryContext::InitUser()
 /// </summary>
 void BaseTelemetryContext::InitDevice()
 {
-    //TODO: https://sourceforge.net/p/predef/wiki/OperatingSystems/
+    //TODO: WMI
     Nullable<std::wstring> strOs;
     strOs.SetValue(L"Windows");
     m_device.SetOs(strOs);
@@ -65,6 +76,8 @@ void BaseTelemetryContext::InitDevice()
     Nullable<std::wstring> strType;
     strType.SetValue(L"Other");
     m_device.SetType(strType);
+
+    m_device.set
 
     //TODO: anonymize machine name
     Nullable<std::wstring> machineName;
@@ -110,9 +123,21 @@ void BaseTelemetryContext::InitApplication()
 /// </summary>
 void BaseTelemetryContext::InitSession()
 {
-    Nullable<std::wstring> sessionId = Utils::GenerateRandomUUID();
-    m_session.SetId(sessionId);
+    wchar_t sessionIdentifier[512];
+    DWORD sessionIdLength = 512;
+    std::wstring sessionId;
+    if (GetEnvironmentVariableW(L"SYNTHETICS_SESSION_ID", sessionIdentifier, sessionIdLength)) // if could retrieve
+    {
+        sessionId = sessionIdentifier;
+    }
+    else
+    {
+        //couldn't retrieve, set it.
+        sessionId = Utils::GenerateRandomUUID();
+        SetEnvironmentVariableW(L"SYNTHETICS_SESSION_ID", sessionId.c_str());
+    }
 
+    m_session.SetId(sessionId);
     Nullable<std::wstring> strTrue = std::wstring(L"True");
     m_session.SetIsFirst(strTrue);
     m_session.SetIsNew(strTrue);

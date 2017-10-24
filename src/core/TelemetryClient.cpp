@@ -211,10 +211,10 @@ void TelemetryClient::TrackPageView(const std::wstring& pageName, const std::wst
 /// </summary>
 void TelemetryClient::TrackSessionStart()
 {
-    SessionStateData session;
-    session.SetState(SessionState::Start);
+    SessionStateData m_session;
+    m_session.SetState(SessionState::Start);
 
-    Track(session);
+    Track(m_session);
 }
 
 /// <summary>
@@ -259,6 +259,7 @@ void TelemetryClient::Flush()
         m_channel->Send();
     }
 }
+
 
 
 /// <summary>
