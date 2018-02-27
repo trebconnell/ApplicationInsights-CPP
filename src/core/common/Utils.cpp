@@ -23,29 +23,29 @@ using namespace Windows::Storage;
 /// </summary>
 /// <returns>wstring represenation of the current time</returns>
 std::wstring Utils::GetCurrentDateTime() {
-	struct tm newtime;
-	time_t now;
-	int milli;
-	wchar_t date[80] = {0};
+    struct tm newtime;
+    time_t now;
+    int milli;
+    wchar_t date[80] = {0};
 
 #if _WIN32 || WINAPI_FAMILY
-	struct _timeb timebuffer;
+    struct _timeb timebuffer;
 
-	_ftime_s(&timebuffer);
-	now = timebuffer.time;
-	milli = timebuffer.millitm;
-	
-	errno_t err = gmtime_s(&newtime, &now);
-	if (err)
+    _ftime_s(&timebuffer);
+    now = timebuffer.time;
+    milli = timebuffer.millitm;
+
+    errno_t err = gmtime_s(&newtime, &now);
+    if (err)
 #else
     now = time(nullptr);
     if (!gmtime_r(reinterpret_cast<time_t *>(&now), &newtime))
 #endif
-	{
-		return L"";
-	}
+    {
+        return L"";
+    }
 
-	wcsftime(date, _ARRAY_SIZE(date), L"%Y-%m-%dT%H:%M:%S", &newtime);
+    wcsftime(date, _ARRAY_SIZE(date), L"%Y-%m-%dT%H:%M:%S", &newtime);
     return std::wstring(date) + L"." + std::to_wstring(milli) + L"Z";
 }
 
@@ -53,50 +53,50 @@ std::wstring Utils::GetCurrentDateTime() {
 /// Generates the random UUID.
 /// </summary>
 /// <returns>wstring respresentationof the generated UUID</returns>
-std::wstring Utils::GenerateRandomUUID(){
-	int partSizes[] = { 8, 4, 4, 4, 12 };
-	wchar_t uuid[37];
-	memset(uuid, 0, sizeof(uuid));
-	int num;
-	srand((int)time(nullptr));
-	int index = 0;
-	for (int part = 0; part < 5; part++)
-	{
-		if (part > 0)
-		{
-			uuid[index] = '-';
-			index++;
-		}
+std::wstring Utils::GenerateRandomUUID() {
+    int partSizes[] = {8, 4, 4, 4, 12};
+    wchar_t uuid[37];
+    memset(uuid, 0, sizeof(uuid));
+    int num;
+    srand((int)time(nullptr));
+    int index = 0;
+    for (int part = 0; part < 5; part++)
+    {
+        if (part > 0)
+        {
+            uuid[index] = '-';
+            index++;
+        }
 
-		// Generating UUID format version 4 
-		// http://en.wikipedia.org/wiki/Universally_unique_identifier
-		for (int i = 0; i < partSizes[part]; i++, index++)
-		{
-			if (part == 2 && i == 0)
-			{
-				num = 4;
-			}
-			else if (part == 4 && i == 0)
-			{
-				num = (rand() % 4) + 8;
-			}
-			else
-			{
-				num = rand() % 16;
-			}
+        // Generating UUID format version 4 
+        // http://en.wikipedia.org/wiki/Universally_unique_identifier
+        for (int i = 0; i < partSizes[part]; i++, index++)
+        {
+            if (part == 2 && i == 0)
+            {
+                num = 4;
+            }
+            else if (part == 4 && i == 0)
+            {
+                num = (rand() % 4) + 8;
+            }
+            else
+            {
+                num = rand() % 16;
+            }
 
-			if (num < 10)
-			{
-				uuid[index] = (wchar_t)(L'0' + num);
-			}
-			else
-			{
-				uuid[index] = (wchar_t)(L'a' + (num - 10));
-			}
-		}
-	}
+            if (num < 10)
+            {
+                uuid[index] = (wchar_t)(L'0' + num);
+            }
+            else
+            {
+                uuid[index] = (wchar_t)(L'a' + (num - 10));
+            }
+        }
+    }
 
-	return uuid;
+    return uuid;
 
 }
 
@@ -108,7 +108,7 @@ void Utils::WriteDebugLine(const std::wstring &output)
 {
 #ifdef _DEBUG
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
-	OutputDebugString((L"\r\nAPPLICATION INSIGHTS : \r\n" + output).c_str());
+    OutputDebugString((L"\r\nAPPLICATION INSIGHTS : \r\n" + output).c_str());
 #endif
 #endif
 }
@@ -123,15 +123,15 @@ void Utils::WriteDebugLine(const std::wstring &output)
 /// <returns></returns>
 bool Utils::OpenRegKey(HKEY &hKey, std::wstring iKey)  // Windows desktop
 {
-	wchar_t regKey[128];
-	swprintf_s(regKey, 128, L"SOFTWARE\\AppInsights\\%ls", iKey.c_str());
-	LONG ret = RegCreateKeyEx(HKEY_CURRENT_USER, regKey, 0, nullptr, 0, KEY_READ | KEY_WRITE, nullptr, &hKey, nullptr);
-	if (ret != ERROR_SUCCESS)
-	{
-		Utils::WriteDebugLine(L"ERROR: Failed to open reg key");
-		return false;
-	}
-	return true;
+    wchar_t regKey[128];
+    swprintf_s(regKey, 128, L"SOFTWARE\\AppInsights\\%ls", iKey.c_str());
+    LONG ret = RegCreateKeyEx(HKEY_CURRENT_USER, regKey, 0, nullptr, 0, KEY_READ | KEY_WRITE, nullptr, &hKey, nullptr);
+    if (ret != ERROR_SUCCESS)
+    {
+        Utils::WriteDebugLine(L"ERROR: Failed to open reg key");
+        return false;
+    }
+    return true;
 }
 
 #else // store or phone
@@ -141,9 +141,9 @@ bool Utils::OpenRegKey(HKEY &hKey, std::wstring iKey)  // Windows desktop
 /// <returns>the local settings container for AppInsights</returns>
 Windows::Foundation::Collections::IPropertySet^ Utils::GetLocalSettingsContainer()
 {
-	ApplicationDataContainer^ localSettings = ApplicationData::Current->LocalSettings;
-	ApplicationDataContainer^ container = localSettings->CreateContainer("AppInsights", ApplicationDataCreateDisposition::Always);
-	return localSettings->Containers->Lookup("AppInsights")->Values;
+    ApplicationDataContainer^ localSettings = ApplicationData::Current->LocalSettings;
+    ApplicationDataContainer^ container = localSettings->CreateContainer("AppInsights", ApplicationDataCreateDisposition::Always);
+    return localSettings->Containers->Lookup("AppInsights")->Values;
 }
 #endif
 #endif

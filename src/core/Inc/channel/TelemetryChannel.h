@@ -18,47 +18,31 @@ namespace ApplicationInsights
 {
     namespace core
     {
-        class TELEMETRYCLIENT_API TelemetryChannel
+        struct TELEMETRYCLIENT_API ITelemetryChannel
         {
-        public:
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
-            /// </summary>
-            /// <param name="config">The configuration.</param>
-            TelemetryChannel(TelemetryClientConfig &config);
-
-            /// <summary>
-            /// Finalizes an instance of the <see cref="TelemetryChannel"/> class.
-            /// </summary>
-            virtual ~TelemetryChannel();
-
             /// <summary>
             /// Enqueues the specified context.
             /// </summary>
             /// <param name="context">The context.</param>
             /// <param name="telemetry">The telemetry.</param>
-            void Enqueue(TelemetryContext &context, Domain &telemetry);
+            virtual void Enqueue(TelemetryContext &context, Domain &telemetry) = 0;
 
             /// <summary>
             /// Sends this instance.
             /// </summary>
-            void Send();
+            virtual void SendAsync() = 0;
 
-        protected:
-            int m_channelId;
-            int m_seqNum;
-            int m_maxBufferSize;
-            TelemetryClientConfig *m_config;
-            std::vector<std::wstring> m_buffer;
-            RequestTracker* m_requestTracker;
-            HttpResponse resp;
-
-#ifdef WINAPI_FAMILY_PARTITION
-#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-            HANDLE hRespRecv;
-#endif
-#endif
+            /// <summary>
+            /// Sends synchronously
+            /// </summary>
+            virtual void Send() = 0;
         };
+
+        struct TELEMETRYCLIENT_API TelemetryChannelFactory
+        {
+            static ITelemetryChannel* CreateTelemetryChannel(TelemetryClientConfig &config);
+        };
+
     }
 }
 #endif

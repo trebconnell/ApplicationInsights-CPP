@@ -129,6 +129,11 @@ namespace ApplicationInsights
             void Track(Domain& telemetry);
 
             /// <summary>
+            /// Flushes this instance.asynchronously
+            /// </summary>
+            void FlushAsync();
+
+            /// <summary>
             /// Flushes this instance.
             /// </summary>
             void Flush();
@@ -168,7 +173,7 @@ namespace ApplicationInsights
             std::unique_ptr<TelemetryContext> m_context;
 
             // The telemetry channel for this client.
-            std::unique_ptr<TelemetryChannel> m_channel;
+            std::unique_ptr<ITelemetryChannel> m_channel;
         };
     }
 }

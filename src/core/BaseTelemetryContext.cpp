@@ -34,21 +34,32 @@ void BaseTelemetryContext::InitContext()
 }
 
 /// <summary>
-/// Initializes the user context.
+/// Initializes the user context. Checks for existence of SYNTHETICS_SESSION_USER_ID for multi-node cases. Otherwise default to local user name
 /// </summary>
 void BaseTelemetryContext::InitUser()
 {
-    //TODO: anonymize username
-    wchar_t userName[UNLEN + 1];
-    DWORD userNameLength = _countof(userName);
-    if (!GetUserNameW(userName, &userNameLength))
+    std::wstring sessionUser;
+    wchar_t sessionUserName[512];
+    wchar_t userName[512];
+    DWORD userNameLength = 512;
+
+    if (GetEnvironmentVariableW(L"SYNTHETICS_SESSION_USER_ID", sessionUserName, userNameLength)) // couldn't retrieve synthetics session user id
     {
-        userName[0] = '\0';
+        sessionUser = sessionUserName;
     }
-    Nullable<std::wstring> uuid = std::wstring(userName);
+    else
+    {
+        if (!GetUserNameW(userName, &userNameLength)) // check for local user name
+        {
+            userName[0] = '\0';
+        }
+        sessionUser = userName;
+    }
+
+    Nullable<std::wstring> uuid = std::wstring(sessionUser);
     Nullable<std::wstring> date = Utils::GetCurrentDateTime();
-    user.SetId(uuid);
-    user.SetAccountAcquisitionDate(date);
+    m_user.SetId(uuid);
+    m_user.SetAccountAcquisitionDate(date);
 }
 
 
@@ -57,14 +68,14 @@ void BaseTelemetryContext::InitUser()
 /// </summary>
 void BaseTelemetryContext::InitDevice()
 {
-    //TODO: https://sourceforge.net/p/predef/wiki/OperatingSystems/
+    //TODO: WMI
     Nullable<std::wstring> strOs;
     strOs.SetValue(L"Windows");
-    device.SetOs(strOs);
+    m_device.SetOs(strOs);
 
     Nullable<std::wstring> strType;
     strType.SetValue(L"Other");
-    device.SetType(strType);
+    m_device.SetType(strType);
 
     //TODO: anonymize machine name
     Nullable<std::wstring> machineName;
@@ -72,7 +83,7 @@ void BaseTelemetryContext::InitDevice()
     DWORD size = sizeof(computerName) / sizeof(computerName[0]);
     GetComputerName(computerName, &size);
     machineName.SetValue(std::wstring(computerName));
-    device.SetMachineName(machineName);
+    m_device.SetMachineName(machineName);
 }
 
 void BaseTelemetryContext::SetOperationID(const std::wstring& opID)
@@ -101,6 +112,8 @@ void BaseTelemetryContext::PopParentID()
 void BaseTelemetryContext::InitApplication()
 {
     //TODO
+    //app.SetBuild();
+    //app.SetVer();
 }
 
 /// <summary>
@@ -108,12 +121,24 @@ void BaseTelemetryContext::InitApplication()
 /// </summary>
 void BaseTelemetryContext::InitSession()
 {
-    Nullable<std::wstring> sessionId = Utils::GenerateRandomUUID();
-    session.SetId(sessionId);
+    wchar_t sessionIdentifier[512];
+    DWORD sessionIdLength = 512;
+    std::wstring sessionId;
+    if (GetEnvironmentVariableW(L"SYNTHETICS_SESSION_ID", sessionIdentifier, sessionIdLength)) // if could retrieve
+    {
+        sessionId = sessionIdentifier;
+    }
+    else
+    {
+        //couldn't retrieve, set it.
+        sessionId = Utils::GenerateRandomUUID();
+        SetEnvironmentVariableW(L"SYNTHETICS_SESSION_ID", sessionId.c_str());
+    }
 
+    m_session.SetId(sessionId);
     Nullable<std::wstring> strTrue = std::wstring(L"True");
-    session.SetIsFirst(strTrue);
-    session.SetIsNew(strTrue);
+    m_session.SetIsFirst(strTrue);
+    m_session.SetIsNew(strTrue);
 }
 
 /// <summary>
@@ -122,12 +147,12 @@ void BaseTelemetryContext::InitSession()
 void BaseTelemetryContext::RenewSession()
 {
     Nullable<std::wstring> sessionId = Utils::GenerateRandomUUID();
-    session.SetId(sessionId);
+    m_session.SetId(sessionId);
 
     Nullable<std::wstring> strTrue = std::wstring(L"True");
     Nullable<std::wstring> strFalse = std::wstring(L"False");
-    session.SetIsFirst(strFalse);
-    session.SetIsNew(strTrue);
+    m_session.SetIsFirst(strFalse);
+    m_session.SetIsNew(strTrue);
 }
 
 /// <summary>
@@ -139,29 +164,29 @@ RESULT BaseTelemetryContext::GetContextTags(wstring_wstring_map& tags)
 {
     tags.clear();
 
-    AddToMapIfHasValue(tags, L"ai.user.accountAcquisitionDate", user.GetAccountAcquisitionDate());
-    AddToMapIfHasValue(tags, L"ai.user.accountId", user.GetAccountId());
-    AddToMapIfHasValue(tags, L"ai.user.userAgent", user.GetUserAgent());
-    AddToMapIfHasValue(tags, L"ai.user.id", user.GetId());
+    AddToMapIfHasValue(tags, L"ai.user.accountAcquisitionDate", m_user.GetAccountAcquisitionDate());
+    AddToMapIfHasValue(tags, L"ai.user.accountId", m_user.GetAccountId());
+    AddToMapIfHasValue(tags, L"ai.user.userAgent", m_user.GetUserAgent());
+    AddToMapIfHasValue(tags, L"ai.user.id", m_user.GetId());
 
-    AddToMapIfHasValue(tags, L"ai.device.id", device.GetId());
-    AddToMapIfHasValue(tags, L"ai.device.ip", device.GetIp());
-    AddToMapIfHasValue(tags, L"ai.device.language", device.GetLanguage());
-    AddToMapIfHasValue(tags, L"ai.device.locale", device.GetLocale());
-    AddToMapIfHasValue(tags, L"ai.device.model", device.GetModel());
-    AddToMapIfHasValue(tags, L"ai.device.network", device.GetNetwork());
-    AddToMapIfHasValue(tags, L"ai.device.oemName", device.GetOemName());
-    AddToMapIfHasValue(tags, L"ai.device.os", device.GetOs());
-    AddToMapIfHasValue(tags, L"ai.device.osVersion", device.GetOsVersion());
-    AddToMapIfHasValue(tags, L"ai.device.roleInstance", device.GetRoleInstance());
-    AddToMapIfHasValue(tags, L"ai.device.roleName", device.GetRoleName());
-    AddToMapIfHasValue(tags, L"ai.device.screenResolution", device.GetScreenResolution());
-    AddToMapIfHasValue(tags, L"ai.device.type", device.GetType());
-    AddToMapIfHasValue(tags, L"ai.device.machineName", device.GetMachineName());
+    AddToMapIfHasValue(tags, L"ai.device.id", m_device.GetId());
+    AddToMapIfHasValue(tags, L"ai.device.ip", m_device.GetIp());
+    AddToMapIfHasValue(tags, L"ai.device.language", m_device.GetLanguage());
+    AddToMapIfHasValue(tags, L"ai.device.locale", m_device.GetLocale());
+    AddToMapIfHasValue(tags, L"ai.device.model", m_device.GetModel());
+    AddToMapIfHasValue(tags, L"ai.device.network", m_device.GetNetwork());
+    AddToMapIfHasValue(tags, L"ai.device.oemName", m_device.GetOemName());
+    AddToMapIfHasValue(tags, L"ai.device.os", m_device.GetOs());
+    AddToMapIfHasValue(tags, L"ai.device.osVersion", m_device.GetOsVersion());
+    AddToMapIfHasValue(tags, L"ai.device.roleInstance", m_device.GetRoleInstance());
+    AddToMapIfHasValue(tags, L"ai.device.roleName", m_device.GetRoleName());
+    AddToMapIfHasValue(tags, L"ai.device.screenResolution", m_device.GetScreenResolution());
+    AddToMapIfHasValue(tags, L"ai.device.type", m_device.GetType());
+    AddToMapIfHasValue(tags, L"ai.device.machineName", m_device.GetMachineName());
 
-    AddToMapIfHasValue(tags, L"ai.application.ver", app.GetVer());
+    AddToMapIfHasValue(tags, L"ai.application.ver", m_app.GetVer());
 
-    AddToMapIfHasValue(tags, L"ai.session.id", session.GetId());
+    AddToMapIfHasValue(tags, L"ai.session.id", m_session.GetId());
 
     if (!m_parentIds.empty())
     {
@@ -176,8 +201,8 @@ RESULT BaseTelemetryContext::GetContextTags(wstring_wstring_map& tags)
         tags[L"ai.operation.name"] = m_opName;
     }
 
-    AddToMapIfHasValue(tags, L"ai.session.isFirst", session.GetIsFirst());
-    AddToMapIfHasValue(tags, L"ai.session.isNew", session.GetIsNew());
+    AddToMapIfHasValue(tags, L"ai.session.isFirst", m_session.GetIsFirst());
+    AddToMapIfHasValue(tags, L"ai.session.isNew", m_session.GetIsNew());
 
     return RESULT_OK;
 }

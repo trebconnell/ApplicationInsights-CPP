@@ -34,11 +34,11 @@ void TelemetryContext::InitDevice()
 {
 	Nullable<std::wstring> strOs;
 	strOs.SetValue(L"Windows");
-	device.SetOs(strOs);
+	m_device.SetOs(strOs);
 
 	Nullable<std::wstring> strType;
 	strType.SetValue(L"Other");
-	device.SetType(strType);
+	m_device.SetType(strType);
 }
 
 /// <summary>

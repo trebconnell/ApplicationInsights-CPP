@@ -26,7 +26,7 @@ TelemetryClient::TelemetryClient(std::wstring& iKey)
     m_config = std::make_unique<TelemetryClientConfig>(iKey);
     m_context = std::make_unique<TelemetryContext>(iKey);
     m_context->InitContext();
-    m_channel = std::make_unique<TelemetryChannel>(*m_config);
+    m_channel.reset(TelemetryChannelFactory::CreateTelemetryChannel(*m_config));
 }
 
 /// <summary>
@@ -44,8 +44,6 @@ TelemetryClient::TelemetryClient(TelemetryClientConfig &config, TelemetryContext
 /// </summary>
 TelemetryClient::~TelemetryClient()
 {
-    // Flush any pending data
-    Flush();
 }
 
 /// <summary>
@@ -213,10 +211,10 @@ void TelemetryClient::TrackPageView(const std::wstring& pageName, const std::wst
 /// </summary>
 void TelemetryClient::TrackSessionStart()
 {
-    SessionStateData session;
-    session.SetState(SessionState::Start);
+    SessionStateData m_session;
+    m_session.SetState(SessionState::Start);
 
-    Track(session);
+    Track(m_session);
 }
 
 /// <summary>
@@ -243,6 +241,17 @@ void TelemetryClient::Track(Domain& telemetry)
 /// <summary>
 /// Flushes this instance.
 /// </summary>
+void TelemetryClient::FlushAsync()
+{
+    if (m_channel)
+    {
+        m_channel->SendAsync();
+    }
+}
+
+/// <summary>
+/// Flushes this instance.
+/// </summary>
 void TelemetryClient::Flush()
 {
     if (m_channel)
@@ -250,6 +259,7 @@ void TelemetryClient::Flush()
         m_channel->Send();
     }
 }
+
 
 
 /// <summary>
